@@ -1,8 +1,8 @@
 import 'package:clothes_shop/common/components.dart';
-import 'package:clothes_shop/pages/add_product.dart';
-import 'package:clothes_shop/pages/all_products.dart';
-import 'package:clothes_shop/pages/nav_bar.dart';
-import 'package:clothes_shop/pages/show_cart.dart';
+import 'package:clothes_shop/pages/android/add_product.dart';
+import 'package:clothes_shop/pages/android/all_products.dart';
+import 'package:clothes_shop/pages/android/nav_bar.dart';
+import 'package:clothes_shop/pages/android/show_cart.dart';
 import 'package:clothes_shop/services/sql_service.dart';
 import 'package:flutter/material.dart';
 

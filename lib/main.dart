@@ -1,4 +1,7 @@
-import 'package:clothes_shop/pages/home_screen.dart';
+import 'dart:io';
+
+import 'package:clothes_shop/pages/android/home_screen.dart' as android;
+import 'package:clothes_shop/pages/web/home_screen.dart' as web;
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -11,10 +14,10 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
-      home: HomeScreen(),
+      home: (Platform.isAndroid) ? const android.HomeScreen() : const web.HomeScreen(),
     );
   }
 }
