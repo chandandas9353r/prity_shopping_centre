@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => ShowProduct(
-                                productImageLocation: 'assets/images/no_image.jpg',
+                                productImageLocation: 'https://raw.githubusercontent.com/chandandas9353r/prity_shopping_centre/master/assets/images/no_image.jpg',
                                 productName: 'PRODUCT ${index+1}',
                                 productPrice: '₹${price.toString()}',
                                 localStorage: localStorage,
@@ -92,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           );
                         },
-                        child: Image.network('https://github.com/chandandas9353r/prity_shopping_centre/blob/master/assets/images/no_image.jpg'),
+                        child: Image.network('https://raw.githubusercontent.com/chandandas9353r/prity_shopping_centre/master/assets/images/no_image.jpg'),
                       ),
                     ),
                   ),
