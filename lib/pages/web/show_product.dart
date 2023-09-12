@@ -1,12 +1,18 @@
+import 'dart:convert';
+
+import 'package:clothes_shop/services/storage_service.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ShowProduct extends StatefulWidget {
   final String productImageLocation, productName, productPrice;
+  final LocalStorage localStorage;
   const ShowProduct({
     super.key,
     required this.productImageLocation,
     required this.productName,
     required this.productPrice,
+    required this.localStorage,
   });
 
   @override
@@ -14,6 +20,19 @@ class ShowProduct extends StatefulWidget {
 }
 
 class _ShowProductState extends State<ShowProduct> {
+  SharedPreferences? _sharedPreferences;
+
+  @override
+  void initState(){
+    super.initState();
+    _initialise;
+  }
+
+  get _initialise async {
+    if(_sharedPreferences != null) return;
+    _sharedPreferences = await SharedPreferences.getInstance();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -50,13 +69,36 @@ class _ShowProductState extends State<ShowProduct> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(10.0),
-                        decoration: BoxDecoration(
-                          color: Colors.red.shade200,
-                          borderRadius: BorderRadius.circular(10.0)
+                      MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          onTap: () async {
+                            String data = jsonEncode({
+                              'image' : widget.productImageLocation,
+                              'name' : widget.productName,
+                              'price' : widget.productPrice,
+                            });
+                            List<String>? prevDataList = widget.localStorage.getItems;
+                            String? previousData;
+                            Map<String,String> prevData = {};
+                            if(prevDataList?.isNotEmpty == true) {
+                              prevData = Map.from(jsonDecode(prevDataList?[0] as String));
+                              previousData = jsonEncode(prevData);
+                              setState(() {});
+                              await _sharedPreferences?.setStringList('item', [previousData, data]);
+                            } else {
+                              await _sharedPreferences?.setStringList('item', [data]);
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                              color: Colors.red.shade200,
+                              borderRadius: BorderRadius.circular(10.0)
+                            ),
+                            child: const Text('Add To Cart'),
+                          ),
                         ),
-                        child: const Text('Add To Cart'),
                       ),
                       Container(
                         margin: const EdgeInsets.all(10.0),

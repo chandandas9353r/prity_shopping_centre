@@ -2,6 +2,7 @@
 
 import 'package:clothes_shop/pages/web/cart_page.dart';
 import 'package:clothes_shop/pages/web/show_product.dart';
+import 'package:clothes_shop/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -16,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isLoading = true;
   int crossAxisCount = 2;
   double childAspectRatio = 1;
+  LocalStorage localStorage = LocalStorage();
   @override
   void initState(){
     super.initState();
@@ -45,7 +47,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const CartPage(),
+                      builder: (context) => CartPage(
+                        localStorage: localStorage,
+                      ),
                     ),
                   );
                 },
@@ -83,14 +87,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 productImageLocation: 'assets/images/no_image.jpg',
                                 productName: 'PRODUCT ${index+1}',
                                 productPrice: '₹${price.toString()}',
+                                localStorage: localStorage,
                               ),
                             ),
                           );
                         },
-                        child: Image.network(
-                          'assets/images/no_image.jpg',
-                          fit: BoxFit.scaleDown,
-                        ),
+                        child: Image.network('https://github.com/chandandas9353r/prity_shopping_centre/blob/master/assets/images/no_image.jpg'),
                       ),
                     ),
                   ),
