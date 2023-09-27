@@ -1,15 +1,22 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:clothes_shop/common/components.dart';
 import 'package:clothes_shop/services/sql_service.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:path_provider/path_provider.dart';
 
 class AddProduct extends StatefulWidget {
   final void Function(bool isDone) onTap;
+  final int id;
   final DatabaseHelper databaseHelper;
   const AddProduct({
     super.key,
+    required this.id,
     required this.onTap,
     required this.databaseHelper,
   });
@@ -17,13 +24,50 @@ class AddProduct extends StatefulWidget {
   State<AddProduct> createState() => _AddProductState();
 }
 class _AddProductState extends State<AddProduct>{
-  String imagePath = '';
+  String imagePath = '', fileName = '', imageLink = '';
+  Directory? tempDir;
   TextEditingController nameController = TextEditingController(),
   descriptionController = TextEditingController(),
   priceController = TextEditingController();
   FocusNode nameFocus = FocusNode(),
   descriptionFocus = FocusNode(),
   priceFocus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    print(widget.id);
+    _initialiseTempDir();
+  }
+
+  Future<void> _initialiseTempDir() async {
+    tempDir = await getTemporaryDirectory();
+  }
+  
+  Future<void> storeData() async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference storageRef = storage.ref();
+    Reference imagesRef = storageRef.child('images/$fileName');
+    TaskSnapshot uploadFile = await imagesRef.putFile(File('${tempDir?.path}/$fileName'));
+    imageLink = await uploadFile.ref.getDownloadURL();
+    if(!mounted) return;
+    setState(() {});
+  }
+
+  Future<void> saveData(String name, String description, String price) async {
+    FirebaseDatabase database = FirebaseDatabase.instance..databaseURL = 'https://prity-shopping-centre-default-rtdb.asia-southeast1.firebasedatabase.app/';
+    DatabaseReference ref = database.ref("products/${widget.id + 1}/");
+
+    await ref.set(
+      {
+        'title' : name,
+        'description' : description,
+        'price' : price,
+        'image' : imageLink,
+      }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -49,9 +93,12 @@ class _AddProductState extends State<AddProduct>{
                 GestureDetector(
                   onTap: () async {
                     XFile image = await ImagePicker().pickImage(source: ImageSource.gallery) as XFile;
-                    setState(() {
-                      imagePath = image.path;
-                    });
+                    Uint8List compressedData = await FlutterImageCompress.compressWithFile(image.path) as Uint8List;
+                    File file = await File("${tempDir?.path}/${image.name}").create();
+                    file.writeAsBytesSync(compressedData);
+                    imagePath = file.path;
+                    fileName = image.name;
+                    setState(() {});
                   },
                   child: const Button(text: 'Add Image',),
                 ),
@@ -147,13 +194,15 @@ class _AddProductState extends State<AddProduct>{
                         priceFocus.requestFocus();
                         return;
                       }
-                      widget.databaseHelper.insertData(
-                        widget.databaseHelper.id,
-                        imagePath,
-                        nameController.text,
-                        descriptionController.text,
-                        int.parse(priceController.text)
-                      );
+                      await storeData();
+                      if(imageLink.isNotEmpty) await saveData(nameController.text, descriptionController.text, priceController.text);
+                      // widget.databaseHelper.insertData(
+                      //   widget.databaseHelper.id,
+                      //   imagePath,
+                      //   nameController.text,
+                      //   descriptionController.text,
+                      //   int.parse(priceController.text)
+                      // );
                       widget.onTap(true);
                     },
                     child: const Button(text: 'Submit'),

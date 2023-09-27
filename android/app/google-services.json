@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "101277268712",
+    "project_id": "prity-shopping-centre",
+    "storage_bucket": "prity-shopping-centre.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:101277268712:android:6d9ce460a5a52a56c5a75d",
+        "android_client_info": {
+          "package_name": "com.example.clothes_shop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABdA9sDA0i68SoqsGFR-l6OlAR-e--zfM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

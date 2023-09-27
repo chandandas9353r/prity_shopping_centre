@@ -4,6 +4,7 @@ import 'package:clothes_shop/pages/android/all_products.dart';
 import 'package:clothes_shop/pages/android/nav_bar.dart';
 import 'package:clothes_shop/pages/android/show_cart.dart';
 import 'package:clothes_shop/services/sql_service.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,9 +20,17 @@ class _HomeScreenState extends State<HomeScreen> {
     Icons.add,
     Icons.shopping_cart,
   ];
+  FirebaseApp? app = Firebase.app();
   String currentPage = 'home';
   bool isAddingProduct = false;
   DatabaseHelper databaseHelper = DatabaseHelper();
+  int? id;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -110,6 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   if(currentPage == 'home') Flexible(
                     child: AllProducts(
                       databaseHelper: databaseHelper,
+                      onSuccess: (index) => setState(() => id = index),
                     ),
                   ),
                   if(currentPage == 'cart') const Flexible(
@@ -128,6 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           )
           : AddProduct(
+            id: id as int,
             onTap: (isDone) => setState(() {
               if(isDone) isAddingProduct = false;
             }),

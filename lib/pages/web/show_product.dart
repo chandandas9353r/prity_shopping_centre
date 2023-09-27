@@ -46,12 +46,14 @@ class _ShowProductState extends State<ShowProduct> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                alignment: Alignment.topCenter,
-                width: double.maxFinite,
-                child: Image.network(
-                  widget.productImageLocation,
-                  fit: BoxFit.scaleDown,
+              Expanded(
+                child: Container(
+                  alignment: Alignment.topCenter,
+                  width: double.maxFinite,
+                  child: Image.network(
+                    widget.productImageLocation,
+                    fit: BoxFit.scaleDown,
+                  ),
                 ),
               ),
               Container(
