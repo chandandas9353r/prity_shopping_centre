@@ -6,7 +6,6 @@ import 'package:clothes_shop/services/storage_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -102,7 +101,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   childAspectRatio: childAspectRatio,
                 ),
                 itemBuilder: (context, index) {
-                  int price = Random().nextInt(100);
                   return Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
