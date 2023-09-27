@@ -52,6 +52,9 @@ class _ShowProductState extends State<ShowProduct> {
                   width: double.maxFinite,
                   child: Image.network(
                     widget.productImageLocation,
+                    headers: const {"Access-Control-Allow-Headers": "Access-Control-Allow-Origin, Accept"},
+                    scale: 1.0,
+                    repeat: ImageRepeat.noRepeat,
                     fit: BoxFit.scaleDown,
                   ),
                 ),
