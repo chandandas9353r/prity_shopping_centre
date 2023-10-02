@@ -52,9 +52,6 @@ class _ShowProductState extends State<ShowProduct> {
                   width: double.maxFinite,
                   child: Image.network(
                     widget.productImageLocation,
-                    headers: const {"Access-Control-Allow-Headers": "Access-Control-Allow-Origin, Accept"},
-                    scale: 1.0,
-                    repeat: ImageRepeat.noRepeat,
                     fit: BoxFit.scaleDown,
                   ),
                 ),
@@ -78,22 +75,14 @@ class _ShowProductState extends State<ShowProduct> {
                         cursor: SystemMouseCursors.click,
                         child: GestureDetector(
                           onTap: () async {
-                            String data = jsonEncode({
+                            String currentData = jsonEncode({
                               'image' : widget.productImageLocation,
                               'name' : widget.productName,
                               'price' : widget.productPrice,
                             });
-                            List<String>? prevDataList = widget.localStorage.getItems;
-                            String? previousData;
-                            Map<String,String> prevData = {};
-                            if(prevDataList?.isNotEmpty == true) {
-                              prevData = Map.from(jsonDecode(prevDataList?[0] as String));
-                              previousData = jsonEncode(prevData);
-                              setState(() {});
-                              await _sharedPreferences?.setStringList('item', [previousData, data]);
-                            } else {
-                              await _sharedPreferences?.setStringList('item', [data]);
-                            }
+                            List<String> totalDataAsList = await widget.localStorage.getItems ?? [];
+                            totalDataAsList.add(currentData);
+                            await _sharedPreferences?.setStringList('item', totalDataAsList);
                           },
                           child: Container(
                             padding: const EdgeInsets.all(10.0),

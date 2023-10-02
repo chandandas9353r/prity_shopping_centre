@@ -12,7 +12,7 @@ class LocalStorage{
     _sharedPreferences = await SharedPreferences.getInstance();
   }
 
-  List<String>? get getItems {
+  Future<List<String>?> get getItems async {
     List<String>? items = _sharedPreferences?.getStringList('item');
     return items;
   }
